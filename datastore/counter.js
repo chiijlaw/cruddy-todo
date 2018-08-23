@@ -24,7 +24,7 @@ const readCounter = (callback) => {
     }
   });
 };
-
+    
 const writeCounter = (count, callback) => {
   var counterString = zeroPaddedNumber(count);
   fs.writeFile(exports.counterFile, counterString, (err) => {
@@ -38,13 +38,13 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+exports.getNextUniqueId = (callback) => {
+  readCounter((err, id) => {
+    writeCounter(id + 1, callback);
+  });
 };
-
-
-
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
 exports.counterFile = path.join(__dirname, 'counter.txt');
+// /Users/student/code/hrsf101-cruddy-todo/datastore/
+// /Users/student/code/hrsf101-cruddy-todo/datastore/counter.txt

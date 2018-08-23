@@ -8,9 +8,15 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, {id: id, text: text});
+  counter.getNextUniqueId((err, newId) => {
+    fs.writeFile(path.join(exports.dataDir, `${newId}.txt`), text, (err) => {
+      if (err) {
+        console.log('------err------', err);
+      } else {
+        callback(null, {id: newId, text: text});
+      }
+    });
+  });
 };
 
 exports.readOne = (id, callback) => {
@@ -43,9 +49,9 @@ exports.update = (id, text, callback) => {
 exports.delete = (id, callback) => {
   var item = items[id];
   delete items[id];
-  if(!item) {
+  if (!item) {
     // report an error if item not found
-    callback(new Error(`No item with id: ${id}`))
+    callback(new Error(`No item with id: ${id}`));
   } else {
     callback();
   }
